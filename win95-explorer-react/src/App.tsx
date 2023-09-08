@@ -8,6 +8,7 @@ import candy from 'react95/dist/themes/candy';
 import ms_sans_serif from 'react95/dist/fonts/ms_sans_serif.woff2';
 import ms_sans_serif_bold from 'react95/dist/fonts/ms_sans_serif_bold.woff2';
 import TaskBar from './components/TaskBar';
+import { useState } from 'react';
 
 
 const GlobalStyles = createGlobalStyle`
@@ -30,21 +31,35 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 function App() {
+  const [windows, setWindows] = useState([
+    { id: '1', type: 'Notepad', minimized: false, closed: false },
+    { id: '2', type: 'Notepad', minimized: false, closed: false },
+    // add more windows here
+  ]);
+
+  const closeWindow = (id: string) => {
+    setWindows(windows.map(w => w.id === id ? { ...w, closed: true } : w));
+  };
+
+  const toggleMinimizeWindow = (id: string) => {
+    setWindows(windows.map(w => w.id === id ? { ...w, minimized: !w.minimized } : w));
+  };
+
   const theme = candy;
   return (
     <div style={{ backgroundColor: "#018281", width: "100vw", height: "100vh" }}>
       <GlobalStyles />
       <ThemeProvider theme={candy}>
         <div style={{ backgroundColor: theme.desktopBackground, width: "100vw", height: "100vh", position: "absolute" }}>
-          <div style={{ position: "absolute" }}>
-            <NotepadWindow />
-          </div>
-          <div style={{ position: "absolute" }}>
-            <NotepadWindow />
-          </div>
+          {windows.map((window) => (
+            !window.closed &&
+            <div style={{ position: "absolute" }}>
+              <NotepadWindow id={window.id} minimized={window.minimized} minimizeWindow={toggleMinimizeWindow} closeWindow={closeWindow} />
+            </div>
+          ))}
         </div>
         <div style={{ backgroundColor: "#0f0", width: "100vw", height: 36, position: "absolute", bottom: 12 }}>
-          <TaskBar />
+          <TaskBar windows={windows} toggleMinimizeWindow={toggleMinimizeWindow} closeWindow={closeWindow} />
         </div>
       </ThemeProvider>
     </div>
