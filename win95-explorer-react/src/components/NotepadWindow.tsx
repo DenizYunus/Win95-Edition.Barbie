@@ -91,7 +91,7 @@ const NotepadWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
     const initialDimensions = useRef({ width: 400, height: 200 });
     const [isResizing, setIsResizing] = useState(false);
 
-    const resizeRef = useRef(null);
+    const resizeRef = useRef<HTMLDivElement | null>(null);
 
     const initialMousePos = useRef({ x: 0, y: 0 });
     const initialWindowPos = useRef({ x: 0, y: 0 });
@@ -127,13 +127,13 @@ const NotepadWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
     useEffect(() => {
         const currentResizeRef = resizeRef.current;
         if (currentResizeRef) {
-            currentResizeRef.addEventListener('mousedown', handleResizeMouseDown);
+            currentResizeRef?.addEventListener('mousedown', handleResizeMouseDown);
             // currentResizeRef.addEventListener('mouseleave', handleResizeMouseUp);
         }
 
         return () => {
             if (currentResizeRef) {
-                currentResizeRef.removeEventListener('mousedown', handleResizeMouseDown);
+                currentResizeRef?.removeEventListener('mousedown', handleResizeMouseDown);
                 // currentResizeRef.removeEventListener('mouseleave', handleResizeMouseUp);
             }
         };
