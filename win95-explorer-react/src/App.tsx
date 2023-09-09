@@ -10,6 +10,7 @@ import ms_sans_serif_bold from 'react95/dist/fonts/ms_sans_serif_bold.woff2';
 import TaskBar from './components/TaskBar';
 import { useState } from 'react';
 import Desktop from './components/Desktop';
+import MyComputerWindow from './components/MyComputerWindow';
 
 
 const GlobalStyles = createGlobalStyle`
@@ -35,6 +36,7 @@ function App() {
   const [windows, setWindows] = useState([
     { id: '1', type: 'Notepad', minimized: false, closed: false },
     { id: '2', type: 'Notepad', minimized: false, closed: false },
+    { id: '3', type: 'MyComputer', minimized: false, closed: false },
     // add more windows here
   ]);
 
@@ -62,18 +64,19 @@ function App() {
     <div style={{ backgroundColor: "#018281", width: "100vw", height: "100vh" }}>
       <GlobalStyles />
       <ThemeProvider theme={candy}>
-        <div style={{ position: "absolute", width: "100vw", height: "100vh", zIndex: 5, overflow: "hidden" }}>
+        <div style={{ position: "absolute", width: "100vw", height: "100vh", zIndex: 1, overflow: "hidden" }}>
           <Desktop createNewWindow={createNewWindow} />
         </div>
         <div style={{ backgroundColor: theme.desktopBackground, width: "100vw", height: "100vh", position: "absolute" }}>
           {windows.map((window) => (
             !window.closed &&
             <div key={window.id} style={{ position: "absolute" }}>
-              <NotepadWindow id={window.id} minimized={window.minimized} minimizeWindow={toggleMinimizeWindow} closeWindow={closeWindow} />
+              {window.type === 'Notepad' && <NotepadWindow id={window.id} minimized={window.minimized} minimizeWindow={toggleMinimizeWindow} closeWindow={closeWindow} />}
+              {window.type === 'MyComputer' && <MyComputerWindow id={window.id} minimized={window.minimized} minimizeWindow={toggleMinimizeWindow} closeWindow={closeWindow} />}
             </div>
           ))}
         </div>
-        <div style={{ backgroundColor: "#0f0", width: "100vw", height: 36, position: "absolute", bottom: 12 }}>
+        <div style={{ backgroundColor: "#0f0", width: "100vw", height: 36, position: "absolute", bottom: 12, zIndex: 2 }}>
           <TaskBar windows={windows} toggleMinimizeWindow={toggleMinimizeWindow} closeWindow={closeWindow} />
         </div>
       </ThemeProvider>
