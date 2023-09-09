@@ -61,7 +61,7 @@ const TaskBar = ({ windows, toggleMinimizeWindow }: any) => {
                         !window.closed && (
                             <div style={{ position: 'relative', display: 'inline-block' }} key={window.id} >
                                 <Button
-                                    active={!window.minimized} // true if minimized, false otherwise
+                                    active={!window.minimized}
                                     onClick={() => toggleMinimizeWindow(window.id)}
                                     style={{ fontWeight: 'bold' }}
                                 >
