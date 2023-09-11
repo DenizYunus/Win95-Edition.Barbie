@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const DesktopIcon = ({ imgSrc, label, onClick, onDoubleClick, selected }: any) => {
     const backgroundColor = selected ? 'blue' : 'transparent';
