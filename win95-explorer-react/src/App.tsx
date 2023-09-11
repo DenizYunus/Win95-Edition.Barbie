@@ -11,6 +11,7 @@ import TaskBar from './components/TaskBar';
 import { useState } from 'react';
 import Desktop from './components/Desktop';
 import MyComputerWindow from './components/MyComputerWindow';
+import ProfileWindow from './components/ProfileWindow';
 
 
 const GlobalStyles = createGlobalStyle`
@@ -35,8 +36,8 @@ const GlobalStyles = createGlobalStyle`
 function App() {
   const [windows, setWindows] = useState([
     { id: '1', type: 'Notepad', minimized: false, closed: false },
-    { id: '2', type: 'Notepad', minimized: false, closed: false },
-    { id: '3', type: 'MyComputer', minimized: false, closed: false },
+    { id: '2', type: 'MyComputer', minimized: false, closed: false },
+    { id: '3', type: 'Profile', minimized: false, closed: false },
     // add more windows here
   ]);
 
@@ -73,11 +74,12 @@ function App() {
             <div key={window.id} style={{ position: "absolute" }}>
               {window.type === 'Notepad' && <NotepadWindow id={window.id} minimized={window.minimized} minimizeWindow={toggleMinimizeWindow} closeWindow={closeWindow} />}
               {window.type === 'MyComputer' && <MyComputerWindow id={window.id} minimized={window.minimized} minimizeWindow={toggleMinimizeWindow} closeWindow={closeWindow} />}
+              {window.type === 'Profile' && <ProfileWindow id={window.id} minimized={window.minimized} minimizeWindow={toggleMinimizeWindow} closeWindow={closeWindow} />}
             </div>
           ))}
         </div>
         <div style={{ backgroundColor: "#0f0", width: "100vw", height: 36, position: "absolute", bottom: 12, zIndex: 2 }}>
-          <TaskBar windows={windows} toggleMinimizeWindow={toggleMinimizeWindow} closeWindow={closeWindow} />
+          <TaskBar windows={windows} toggleMinimizeWindow={toggleMinimizeWindow} createProfileWindow={() => { createNewWindow("Profile"); }} />
         </div>
       </ThemeProvider>
     </div>

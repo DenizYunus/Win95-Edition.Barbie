@@ -6,7 +6,7 @@ import { AppBar, Button, MenuList, MenuListItem, Separator, TextInput, Toolbar }
 import logoIMG from '../assets/logo.png';
 
 
-const TaskBar = ({ windows, toggleMinimizeWindow }: any) => {
+const TaskBar = ({ windows, toggleMinimizeWindow, createProfileWindow }: any) => {
     const [open, setOpen] = useState(false);
 
     return (
@@ -35,7 +35,7 @@ const TaskBar = ({ windows, toggleMinimizeWindow }: any) => {
                                 }}
                                 onClick={() => setOpen(false)}
                             >
-                                <MenuListItem>
+                                <MenuListItem onClick={createProfileWindow}>
                                     <span role='img' aria-label='👨‍💻'>
                                         👨‍💻
                                     </span>

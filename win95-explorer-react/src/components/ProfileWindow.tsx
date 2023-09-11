@@ -3,8 +3,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Button, Window, WindowHeader } from 'react95';
+import { Avatar, Button, GroupBox, Select, Window, WindowHeader } from 'react95';
 import styled from 'styled-components';
+
+import profilePicture from '../assets/profilePicture.jpeg';
 
 const WindowWrapper = styled.div`
   .window-title {
@@ -84,10 +86,10 @@ const WindowWrapper = styled.div`
 `;
 
 
-const NotepadWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
+const ProfileWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
     const [isDragging, setIsDragging] = useState(false);
-    const [position, setPosition] = useState({ x: 200, y: 200 });
-    const [dimensions, setDimensions] = useState({ width: 400, height: 200 });
+    const [position, setPosition] = useState({ x: 700, y: 300 });
+    const [dimensions, setDimensions] = useState({ width: 400, height: 650 });
     const initialDimensions = useRef({ width: 400, height: 200 });
     const [isResizing, setIsResizing] = useState(false);
 
@@ -96,7 +98,7 @@ const NotepadWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
     const initialMousePos = useRef({ x: 0, y: 0 });
     const initialWindowPos = useRef({ x: 0, y: 0 });
 
-    const [textAreaContent, setTextAreaContent] = useState('');
+    const [phoneTextOpen, setPhoneTextOpen] = useState(false);
 
     const handleResizeMouseDown = useCallback((e: any) => {
         if (!minimized) {
@@ -128,13 +130,11 @@ const NotepadWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
         const currentResizeRef = resizeRef.current;
         if (currentResizeRef) {
             currentResizeRef?.addEventListener('mousedown', handleResizeMouseDown);
-            // currentResizeRef.addEventListener('mouseleave', handleResizeMouseUp);
         }
 
         return () => {
             if (currentResizeRef) {
                 currentResizeRef?.removeEventListener('mousedown', handleResizeMouseDown);
-                // currentResizeRef.removeEventListener('mouseleave', handleResizeMouseUp);
             }
         };
     }, [handleResizeMouseDown]);
@@ -201,14 +201,11 @@ const NotepadWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
     }
     return (
         <WindowWrapper>
-            <Window title="Notepad" style={{ width: `${dimensions.width}px`, height: `${dimensions.height}px`, left: `${position.x}px`, top: `${position.y}px`, zIndex: 5 }}
-                resizable={true}
-                // onMouseMove={handleMouseMove}
-                // onMouseUp={handleMouseUp}
-                resizeRef={resizeRef} >
+            <Window title="Profile" style={{ width: `${dimensions.width}px`, height: `${dimensions.height}px`, left: `${position.x}px`, top: `${position.y}px`, zIndex: 5 }}
+            >
                 <WindowHeader className='window-title'
                     onMouseDown={handleMouseDown}>
-                    <span style={{ userSelect: "none" }}>Notepad</span>
+                    <span style={{ userSelect: "none" }}>Profile</span>
                     <div>
                         <Button onClick={() => minimizeWindow(id)}>
                             <span className='minimize-icon'><p style={{ fontSize: 30, position: "absolute", marginTop: -15 }}>_</p></span>
@@ -218,23 +215,65 @@ const NotepadWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
                         </Button>
                     </div>
                 </WindowHeader>
-                <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100% - 36px)' }}>
-                    <textarea
-                        value={textAreaContent}
-                        onChange={(e) => setTextAreaContent(e.target.value)}
-                        style={{
-                            flex: 1,
-                            resize: 'none',
-                            border: 'none',
-                            padding: '0.5rem',
-                            outline: 'none',
-                            boxSizing: 'border-box'
-                        }} />
-                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100% - 36px)', userSelect: "none" }}>
+                    <div style={{ width: "100%", display: "flex", marginTop: 20, alignItems: "center", justifyContent: "center" }}>
+                        <Avatar size={200} src={profilePicture} />
+                    </div>
+                    <div style={{ padding: '20px', justifyContent: "center" }}>
+                        <GroupBox label='Name' style={{ width: "calc(100% - 40px)" }}>
+                            Deniz Yunus Göğüş
+                        </GroupBox>
+                    </div>
+                    <div style={{ padding: '20px', justifyContent: "center" }}>
+                        <GroupBox label='Residence' style={{ width: "calc(100% - 40px)" }}>
+                            Turkey (Prefer remote freelance jobs)
+                            <span style={{ marginLeft: 6 }} role='img' aria-label='😍'>
+                                😍
+                            </span>
+                        </GroupBox>
+                    </div>
+                    <div style={{ padding: '20px', justifyContent: "center" }}>
+                        <GroupBox label='Contact?' style={{ width: "calc(100% - 40px)" }}>
+                            <Select
+                                defaultValue={2}
+                                options={[{ "value": 1, "label": "Hit me up!" }, { "value": 2, "label": "GitHub" }, { "value": 3, "label": "LinkedIn" }, { "value": 4, "label": "Instagram" }, { "value": 7, "label": "Email" }, { "value": 8, "label": "Phone" }]}
+                                menuMaxHeight={160}
+                                width={"100%"}
+                                style={{ backgroundColor: "white" }}
+                                onChange={e => {
+                                    setPhoneTextOpen(false);
+                                    switch (e.label) {
+                                        case "LinkedIn":
+                                            window.open("https://www.linkedin.com/in/deniz-yunus-gogus/");
+                                            break;
+                                        case "GitHub":
+                                            window.open("https://github.com/DenizYunus/");
+                                            break;
+                                        case "Instagram":
+                                            window.open("https://www.instagram.com/deniz_yunus.gogus/");
+                                            break;
+                                        case "Email":
+                                            window.open("mailto:denizyunusgogus@gmail.com");
+                                            break;
+                                        case "Phone":
+                                            setPhoneTextOpen(true);
+                                            break;
+                                        default: break;
+                                    }
+                                }}
+                                onOpen={e => console.log('open', e)}
+                                onClose={e => console.log('close', e)}
+                                onBlur={e => console.log('blur', e)}
+                                onFocus={e => console.log('focus', e)}
+                            />
+                            {phoneTextOpen && <p style={{ marginTop: 7, color: "black", fontWeight: "bold" }}>I guess we haven't met yet :(</p>}
+                        </GroupBox>
+                    </div>
 
+                </div>
             </Window>
         </WindowWrapper>
     );
 };
 
-export default NotepadWindow;
+export default ProfileWindow;

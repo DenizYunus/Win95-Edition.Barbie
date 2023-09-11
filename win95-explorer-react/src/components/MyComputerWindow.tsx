@@ -6,6 +6,8 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button, Window, WindowHeader } from 'react95';
 import styled from 'styled-components';
 
+import barbieWindowsLogo from '../assets/BarbieWindowsLogoTransparent.png';
+
 const WindowWrapper = styled.div`
   .window-title {
     display: flex;
@@ -86,8 +88,8 @@ const WindowWrapper = styled.div`
 
 const MyComputerWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
     const [isDragging, setIsDragging] = useState(false);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [dimensions, setDimensions] = useState({ width: 400, height: 200 });
+    const [position, setPosition] = useState({ x: 700, y: 300 });
+    const [dimensions, setDimensions] = useState({ width: 550, height: 450 });
     const initialDimensions = useRef({ width: 400, height: 200 });
     const [isResizing, setIsResizing] = useState(false);
 
@@ -197,9 +199,10 @@ const MyComputerWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) =
     }
     return (
         <WindowWrapper>
-            <Window title="Notepad" style={{ width: `${dimensions.width}px`, height: `${dimensions.height}px`, left: `${position.x}px`, top: `${position.y}px`, zIndex: 5 }}
-                resizable={true}
-                resizeRef={resizeRef} >
+            <Window title="My Computer" style={{ width: `${dimensions.width}px`, height: `${dimensions.height}px`, left: `${position.x}px`, top: `${position.y}px`, zIndex: 5 }}
+            // resizable={true}
+            // resizeRef={resizeRef} 
+            >
                 <WindowHeader className='window-title'
                     onMouseDown={handleMouseDown}>
                     <span style={{ userSelect: "none" }}>My Computer</span>
@@ -212,10 +215,37 @@ const MyComputerWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) =
                         </Button>
                     </div>
                 </WindowHeader>
-                <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100% - 36px)' }}>
-                    Hardware Specs Here as Dummy Data
-                </div>
+                <div style={{ display: 'flex', flexDirection: 'row', height: 'calc(100% - 36px)', userSelect: "none" }}>
+                    {/* <p style={{ userSelect: "none" }}>
+                        Hardware Specs Here as Dummy Data
+                    </p> */}
+                    <div style={{ width: "50%", display: "flex", height: "100%", alignItems: "center", justifyContent: "center" }}>
+                        <img src={barbieWindowsLogo} alt={"WinLogo"} style={{ width: 220, aspectRatio: 1 }} />
+                    </div>
+                    <div style={{ width: "50%", padding: '20px' }}>
+                        {/* borderBottom: '1px solid black', marginTop: 10 */}
+                        <h2>System:</h2>
+                        <ul style={{ paddingLeft: 20 }}>
+                            <li>Microsoft Windows 95</li>
+                            <li>Edition: Barbie</li>
+                            <li>Version: 4.00.950</li>
+                            <li>Registered to: DeNyx</li>
+                        </ul>
 
+                        <h2 style={{ marginTop: 15 }}>Computer:</h2>
+                        <ul style={{ paddingLeft: 20 }}>
+                            <li>Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz</li>
+                            <li>32.0 GB (RAM)</li>
+                            <li>64-bit Operating System</li>
+                        </ul>
+
+                        <h2 style={{ marginTop: 15 }}>Computer Name</h2>
+                        <ul style={{ paddingLeft: 20 }}>
+                            <li>DESKTOP-123XYZ</li>
+                            <li>WORKGROUP</li>
+                        </ul>
+                    </div>
+                </div>
             </Window>
         </WindowWrapper>
     );
