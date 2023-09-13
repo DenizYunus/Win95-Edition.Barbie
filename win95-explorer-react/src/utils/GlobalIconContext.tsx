@@ -1,18 +1,35 @@
 /* eslint-disable react-refresh/only-export-components */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useContext, useState } from 'react';
 import notepadIcon from "../assets/notepadicon.png";
 import mycomputerIcon from "../assets/mycomputericon.png";
 import programmerIcon from "../assets/programmericon.png";
 
-const GlobalIconContext = createContext();
+interface IIcon {
+    imgSrc: string;
+    label: string;
+    type: string;
+    value?: string;
+    id: number;
+}
+
+const GlobalIconContext = createContext<{
+    icons: IIcon[];
+    addIcon: (newIcon: IIcon) => void;
+    removeIcon: (id: number) => void;
+    updateIcon: (id: number, changedFields: Partial<IIcon>) => void;
+}>({
+    icons: [],
+    addIcon: () => { },
+    removeIcon: () => { },
+    updateIcon: () => { }
+});
 
 export const useGlobalIcons = () => {
     return useContext(GlobalIconContext);
 };
 
-export const GlobalIconProvider = ({ children }) => {
-    const [icons, setIcons] = useState([
+export const GlobalIconProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+    const [icons, setIcons] = useState<IIcon[]>([
         {
             imgSrc: notepadIcon,
             label: "Notepad",
@@ -34,7 +51,7 @@ export const GlobalIconProvider = ({ children }) => {
         },
     ]);
 
-    const addIcon = (newIcon: any) => {
+    const addIcon = (newIcon: IIcon) => {
         setIcons([...icons, newIcon]);
     };
 
@@ -42,7 +59,7 @@ export const GlobalIconProvider = ({ children }) => {
         setIcons(icons.filter((icon) => icon.id !== id));
     };
 
-    const updateIcon = (id: number, changedFields: any) => {
+    const updateIcon = (id: number, changedFields: Partial<IIcon>) => {
         const newIcons = icons.map(icon => (icon.id === id ? { ...icon, ...changedFields } : icon));
         setIcons(newIcons);
         console.log(icons);
