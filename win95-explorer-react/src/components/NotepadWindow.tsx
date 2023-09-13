@@ -5,6 +5,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button, Window, WindowHeader } from 'react95';
 import styled from 'styled-components';
+import { useGlobalIcons } from '../utils/GlobalIconContext';
 
 const WindowWrapper = styled.div`
   .window-title {
@@ -66,6 +67,27 @@ const WindowWrapper = styled.div`
       transform: translateY(-50%);
     }
   }
+  .save-icon {
+    display: inline-block;
+    width: 100%;
+    height: 16px;
+    position: relative;
+    align-items: center;
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+    }
+    &:before {
+      height: 100%;
+      width: 3px;
+    }
+    &:after {
+      height: 3px;
+      width: 100%;
+      left: 0px;
+    }
+  }
   .window {
     width: 400px;
     min-height: 200px;
@@ -84,7 +106,9 @@ const WindowWrapper = styled.div`
 `;
 
 
-const NotepadWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
+const NotepadWindow = ({ id, desktopIconId, minimized, minimizeWindow, closeWindow, initialText }: any) => {
+    const { updateIcon } = useGlobalIcons();
+
     const [isDragging, setIsDragging] = useState(false);
     const [position, setPosition] = useState({ x: 200, y: 200 });
     const [dimensions, setDimensions] = useState({ width: 400, height: 200 });
@@ -195,10 +219,14 @@ const NotepadWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
         };
     }, [handleMouseMove, isDragging, minimized]);
 
+    useEffect(() => {
+        setTextAreaContent(initialText);
+    }, [initialText]);
 
     if (minimized) {
         return null;
     }
+
     return (
         <WindowWrapper>
             <Window title="Notepad" style={{ width: `${dimensions.width}px`, height: `${dimensions.height}px`, left: `${position.x}px`, top: `${position.y}px`, zIndex: 5 }}
@@ -210,10 +238,13 @@ const NotepadWindow = ({ id, minimized, minimizeWindow, closeWindow }: any) => {
                     onMouseDown={handleMouseDown}>
                     <span style={{ userSelect: "none" }}>Notepad</span>
                     <div>
+                        <Button style={{width: 60}} onClick={() => updateIcon(desktopIconId, { value: textAreaContent })}>
+                            <span className='save-icon' style={{alignItems: "center", justifyContent: "center" }}><p style={{ fontSize: 16, fontWeight: "bold", position: "absolute", textAlign: "center", width: "100%" }}>Save</p></span>
+                        </Button>
                         <Button onClick={() => minimizeWindow(id)}>
                             <span className='minimize-icon'><p style={{ fontSize: 30, position: "absolute", marginTop: -15 }}>_</p></span>
                         </Button>
-                        <Button onClick={() => closeWindow(id)}>
+                        <Button onClick={() => closeWindow(id, desktopIconId, textAreaContent)}>
                             <span className='close-icon' />
                         </Button>
                     </div>

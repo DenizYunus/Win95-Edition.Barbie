@@ -19,7 +19,6 @@ const DesktopIcon = ({ imgSrc, label, onClick, onDoubleClick, selected }: any) =
         if (clickTimeout) {
             clearTimeout(clickTimeout);
         }
-
         const newTimeout = setTimeout(() => {
             // Reset click count
             setClickCount(0);
